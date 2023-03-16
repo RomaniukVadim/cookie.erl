@@ -69,7 +69,9 @@ timestamp( Seconds ) ->
 -spec parse_name_value( string(), #cookie{} ) -> { ok, #cookie{} } | { error, term() }.
 parse_name_value( [ NameValue | Attributes ], Cookie = #cookie{} ) ->
     case string:tokens( NameValue, "=" ) of
-        [ Name, Value ] -> parse_attributes( Attributes, Cookie#cookie{ name = want:binary( Name ), value = want:binary( Value ) } );
+        [ Name | T ] -> 
+            Value = string:join(T, "="),
+            parse_attributes( Attributes, Cookie#cookie{ name = want:binary( Name ), value = want:binary( Value ) } );
         _               -> { error, missing_name_value }
     end;
     
